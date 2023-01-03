@@ -1,0 +1,16 @@
+{
+  "name": "lesson-17-pageobj",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cy:run": "cypress run",
+    "cy:open": "npx cypress open"
+  },
+  "author": "Marina",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "cypress": "^12.2.0"
+  }
+}
