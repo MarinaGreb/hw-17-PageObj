@@ -23,14 +23,14 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+const loginPageElements = require("../fixtures/pages/loginPageSelectors.json");
 
 Cypress.Commands.add("ChangePassword", (userName, password) => {
   cy.contains(userName).click({ force: true });
   //меняем пароль
-  cy.get(".layout-column-start > :nth-child(1) > .frm").type(password);
-  cy.get( ":nth-child(4) > .form-page-group__main > .layout-column-start > :nth-child(2) > .frm"
-  ).type(password);
-  cy.get(".layout-row-end > .btn-service").click();
+  cy.get(loginPageElements.changePassword1Field).type(password);
+  cy.get(loginPageElements.changePassword2Field).type(password);
+  cy.get(loginPageElements.changePasswordButton).click();
 });
 Cypress.Commands.add("ChangePasswordAPI", (cookie, password) => {
   cy.request({
@@ -43,4 +43,10 @@ Cypress.Commands.add("ChangePasswordAPI", (cookie, password) => {
   }).then((response) => {
     expect(response.status).to.eq(200);
   });
+});
+
+Cypress.Commands.add("Login", (login, password) => {
+  cy.get(loginPageElements.loginField).type(login);
+  cy.get(loginPageElements.passwordField).type(password);
+  cy.get(loginPageElements.loginButton).click();
 });

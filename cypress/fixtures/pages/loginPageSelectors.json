@@ -1,0 +1,8 @@
+{
+    "loginField": ":nth-child(3) > .frm",
+    "passwordField": ":nth-child(4) > .frm",
+    "loginButton": ".btn-main",
+    "changePassword1Field": ".layout-column-start > :nth-child(1) > .frm",
+    "changePassword2Field": ":nth-child(4) > .form-page-group__main > .layout-column-start > :nth-child(2) > .frm",
+    "changePasswordButton": ".layout-row-end > .btn-service"
+}
