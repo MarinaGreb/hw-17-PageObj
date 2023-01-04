@@ -2,6 +2,7 @@
 import { faker } from "@faker-js/faker";
 //import { LoginPage } from "../pages/loginPage";
 const loginPageElements = require("../fixtures/pages/loginPageSelectors.json");
+const mainData = require("../fixtures/example.json");
 let newPassword;
 
 describe("Santa login - UI", () => {
@@ -11,7 +12,7 @@ describe("Santa login - UI", () => {
     cy.log(newPassword);
   });
 
-  let oldPassword = "123456";
+  //let oldPassword = "123456";
 
 
   it("User cannot login with old password - UI", () => {
@@ -19,7 +20,7 @@ describe("Santa login - UI", () => {
     cy.visit("/");
     cy.contains("Вход и регистрация").click({ force: true });
     // loginPage.login("sokovets@outlook.com", oldPassword);
-    cy.Login("sokovets@outlook.com", oldPassword);
+    cy.Login(mainData.email, mainData.password);
     cy.contains("Коробки").should("exist");
     cy.ChangePassword("Марина", newPassword);
     //разлогин
@@ -29,12 +30,12 @@ describe("Santa login - UI", () => {
     cy.visit("/");
     cy.contains("Вход и регистрация").click({ force: true });
     //loginPage.login("sokovets@outlook.com", oldPassword);
-    cy.Login("sokovets@outlook.com", oldPassword);
+    cy.Login(mainData.email, mainData.password);
     cy.contains("Неверное имя пользователя или пароль").should("exist");
     //авторизация с новым паролем
     cy.get(loginPageElements.passwordField).clear().type(newPassword);
     cy.get(loginPageElements.loginButton).click();
-    cy.ChangePassword("Марина", oldPassword);
+    cy.ChangePassword("Марина", mainData.password);
   });
   //новый тест через API
   it("User cannot login with old password - API, UI", () => {
@@ -44,17 +45,17 @@ describe("Santa login - UI", () => {
     //авторизация с новым паролем
     cy.visit("/login");
     //loginPage.login("sokovets@outlook.com", newPassword);
-    cy.Login("sokovets@outlook.com", newPassword);
+    cy.Login(mainData.email, newPassword);
     cy.contains("Коробки").should("exist");
     //разлогин
     cy.visit("/account");
     cy.contains("Выйти с сайта").click();
     //смена пароля на старый
-    cy.ChangePasswordAPI(cookie, oldPassword);
+    cy.ChangePasswordAPI(cookie, mainData.password);
     //авторизация со старым паролем
     cy.visit("/login");
     // loginPage.login("sokovets@outlook.com", oldPassword);
-    cy.Login("sokovets@outlook.com", oldPassword);
+    cy.Login(mainData.email, mainData.password);
     cy.contains("Коробки").should("exist");
   });
 });
