@@ -8,7 +8,7 @@ describe("Actions With Boxes", () => {
   let boxKey = faker.internet.password(4);
 
   //новый тест через API
-  it("Create Box", () => {
+  it("Create Box 1", () => {
     cy.request({
       method: "POST",
       headers: {
@@ -36,6 +36,8 @@ describe("Actions With Boxes", () => {
       },
     }).then((response) => {
       expect(response.status).to.eq(200);
+      expect(response.body).to.have.property('canCreateCards').and.eq(true);//Проверка что есть возможность добавить карточки 
+
     });
     cy.log(boxName);
     cy.log(boxKey);
@@ -52,7 +54,7 @@ describe("Actions With Boxes", () => {
     });
   });
 
-  it("Creating box with all fields filled in", () => {
+  it("Creating box 2 with all fields filled in", () => {
     cy.request({
       method: "POST",
       headers: {
@@ -80,6 +82,8 @@ describe("Actions With Boxes", () => {
       },
     }).then((response) => {
       expect(response.status).to.eq(200);
+      expect(response.body).to.have.nested.property('box.name').and.eq(`${boxName}`);//Проверка, что создана коробока с именем из перемнной boxName 
+      expect(response.body).to.have.nested.property('box.key').and.eq(`${boxKey}`);//Проверка, что создана коробока с ключем из перемнной boxKey 
     });
     cy.log(boxName);
     cy.log(boxKey);
@@ -106,7 +110,7 @@ describe("Actions With Boxes", () => {
       expect(response.status).to.eq(200);
     });
   });
-  it("Creating box with with max. cashLimit", () => {
+  it("Creating box 3 with max. cashLimit", () => {
     cy.request({
       method: "POST",
       headers: {
@@ -138,7 +142,7 @@ describe("Actions With Boxes", () => {
     cy.log(boxName);
     cy.log(boxKey);
   });
-  it("Changing box settings", () => {
+  it("Changing box 3 settings", () => {
     cy.request({
       method: "PUT",
       headers: {
@@ -147,7 +151,7 @@ describe("Actions With Boxes", () => {
       url: "/api/box",
       body: {
         email: null,
-        name: boxName,
+        name: `${boxName}+test`,
         key: boxKey,
         picture: "cup_one",
         usePost: false,
@@ -166,6 +170,9 @@ describe("Actions With Boxes", () => {
       },
     }).then((response) => {
       expect(response.status).to.eq(200);
+      expect(response.body).to.have.nested.property('box.name').and.eq(`${boxName}+test`);//Проверка, что имя коробоки изменено
+      expect(response.body).to.have.nested.property('box.cashLimit').and.eq(1);//Проверка, что лимит изменен
+
     });
   });
   it("Delete Box 3", () => {
@@ -177,6 +184,37 @@ describe("Actions With Boxes", () => {
       url: `/api/box/${boxKey}`,
     }).then((response) => {
       expect(response.status).to.eq(200);
+    });
+  });
+  it("Creating box with invalid data", () => {
+    cy.request({
+      method: "POST",
+      headers: {
+        Cookie: cookie,
+      },
+      url: "/api/box",
+      failOnStatusCode: false,
+      body: {
+        email: null,
+        name: "",
+        key: boxKey,
+        picture: "cup_one",
+        usePost: true,
+        useCashLimit: true,
+        cashLimit: 999999,
+        cashLimitCurrency: "uah",
+        useWish: true,
+        useCircleDraw: null,
+        isInviteAfterDraw: null,
+        isArchived: null,
+        createAdminCard: null,
+        isCreated: true,
+        useNames: true,
+        isPhoneRequired: true,
+        logo: null,
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(400);
     });
   });
 });
